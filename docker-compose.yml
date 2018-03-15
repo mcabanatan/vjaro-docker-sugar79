@@ -1,0 +1,32 @@
+sugarcrm:
+  image: devtac-sugar79
+  command: apache2-foreground
+  links:
+    - mysql_crm
+    - elasticsearch_crm
+  volumes:
+    - .:/app
+    - /app/www/devtac-crm
+    - /home/vincent/Documents/DEVTAC/Asterisk/devtac-crm:/app/www/devtac-crm
+  ports:
+    - "8081:80"
+
+mysql_crm:
+  image: mysql:5.6
+  ports:
+    - "3307:3306"
+  environment:
+    - MYSQL_ROOT_PASSWORD=sugarcrm
+    - MYSQL_USER=sugarcrm
+    - MYSQL_PASSWORD=sugarcrm
+  volumes:
+    - ./docker/config/mysql:/etc/mysql/conf.d
+    - ./docker/data/mysql:/var/lib/mysql
+
+elasticsearch_crm:
+  image: elasticsearch:1.7.5
+  ports:
+    - "9200:9200"
+    - "9300:9300"
+  volumes:
+    - ./docker/config/elasticsearch:/usr/share/elasticsearch/config
